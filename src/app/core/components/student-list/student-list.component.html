@@ -1,0 +1,27 @@
+<div class="container">
+
+    <div class="row">
+        <div class="col">
+            <h1 class="mb-4 text-center">Alumnos</h1>
+    
+            <table class="table table-bordered">
+                <thead>
+                    <tr style="background: lightseagreen;">
+                        <th style="color: black">Nombre</th>
+                        <th>Apellido</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let student of students$ | async">
+                        <td>{{ student.name }}</td>
+                        <td>{{ student.lastname }}</td>
+                        <td [ngStyle]="{'color': (student.active) ? 'green' : 'red'}">
+                            <i class="{{ student.active ? 'bi bi-check-circle-fill' : 'bi bi-dash-circle-fill' }}"></i>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
