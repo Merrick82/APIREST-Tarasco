@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from "@angular/router";
 import { Observable } from "rxjs";
-import { AuthService } from "../services/auth.service";
+import { AuthService } from "../../core/services/auth.service";
 
 @Injectable({
     providedIn: 'root'
@@ -11,13 +11,16 @@ export class AuthGuard implements CanActivate {
 
     public canActivate(next: ActivatedRouteSnapshot, 
         state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
-        if (!this.auth.isAuthenticated()) {
-            alert('Debe estar logueado para acceder');
-            this.router.navigate(['login']);
-            
-            return false;
-        }
+        let response: boolean = false;
 
-        return true;
+        this.auth.getSession().subscribe((session) => {
+            if (session.activeSession && session.user?.admin) {
+                response = true;
+            } else {
+                alert('No tiene permiso para acceder a este recurso!');
+            }
+        });
+
+        return response;
     }
 }

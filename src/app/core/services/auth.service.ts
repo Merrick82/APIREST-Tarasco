@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, map, Observable } from 'rxjs';
+import { Router } from '@angular/router';
+import { BehaviorSubject, from, map, Observable } from 'rxjs';
 import { Session } from 'src/app/models/session';
 import { User } from 'src/app/models/user';
 import { environment } from '../../../environments/environment';
@@ -13,7 +14,7 @@ export class AuthService {
 
   public sessionSubject!: BehaviorSubject<Session>
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private router: Router) {
     const session = {
       activeSession: false
     }
@@ -31,15 +32,24 @@ export class AuthService {
         const session: Session = {
           activeSession: true,
           user: {
+            id: user.id,
             username: user.username,
-            password: user.password
+            password: user.password,
+            admin: user.admin
           }
         };
     
-        localStorage.setItem('isAuthenticated', "true");
         this.sessionSubject.next(session);
+        this.router.navigate(['dashboard']);
       } else {
-        alert('Usuario no encontrado');
+        const session: Session = {
+          activeSession: false,
+          error: {
+            message: 'Usuario no encontrado'
+          }
+        };
+    
+        this.sessionSubject.next(session);
       }
     });
   }
@@ -49,16 +59,11 @@ export class AuthService {
       activeSession: false
     };
 
-    localStorage.setItem('isAuthenticated', "false");
     this.sessionSubject.next(session);
+    this.router.navigate(['login']);
   }
 
-  public getSession() {
+  public getSession(): Observable<Session> {
     return this.sessionSubject.asObservable();
-  }
-
-  public isAuthenticated(): boolean {
-    return JSON.parse(localStorage.getItem('isAuthenticated')!);
-
   }
 }

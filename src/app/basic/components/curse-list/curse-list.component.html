@@ -1,0 +1,25 @@
+<app-navbar></app-navbar>
+<div class="container">
+    <div class="row">
+        <div class="col mt-5">
+            <h1 class="mb-4 text-center">Cursos</h1>
+    
+            <table class="table table-bordered">
+                <thead>
+                    <tr style="background: lightseagreen;">
+                        <th style="color: black">Curso</th>
+                        <th>Habilitado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let curse of curses$ | async">
+                        <td>{{ curse.name }}</td>
+                        <td [ngStyle]="{'color': (curse.active) ? 'green' : 'red'}">
+                            <i class="{{ curse.active ? 'bi bi-check-circle-fill' : 'bi bi-dash-circle-fill' }}"></i>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
